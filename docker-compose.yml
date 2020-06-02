@@ -5,3 +5,9 @@ services:
     tty: true
     volumes:
       - .:/go/src/github.com/urataku/app
+    depends_on:
+      - redis
+  redis:
+    image: redis
+    ports:
+        - "6379:6379"
