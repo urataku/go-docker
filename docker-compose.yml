@@ -1,13 +1,26 @@
 version: '3'
 services:
   app:
-    build: .
+    build: ./app
     tty: true
     volumes:
-      - .:/go/src/github.com/urataku/app
+      - ./app:/go/src/github.com/urataku/app
     depends_on:
       - redis
+      - mysql
   redis:
-    image: redis
+    image: "redis:latest"
     ports:
-        - "6379:6379"
+      - "6379:6379"
+  mysql:
+    image: "mysql:latest"
+    volumes:
+      - ./mysql/sql:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: app
+      TZ: "Asia/Tokyo"
+    ports:
+      - 3306:3306
